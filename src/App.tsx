@@ -1,24 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import Banner from "./Components/banner/banner";
 
 function App() {
+  const p = [
+    "huhu72",
+    "Fenoom",
+    "The Rizz",
+    "XxSaltyPotatoxX",
+    "Goblinguy9",
+    "TheMountaineer",
+    "milky milkers",
+    "McEggs",
+    "Curls for Jesus",
+    "grizzlyging",
+    "pretzelpaste",
+    "shaco spitstain",
+  ];
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {p.map((player) => {
+        return <Banner summoner={player}></Banner>;
+      })}
     </div>
   );
 }
