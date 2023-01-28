@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/league-tracker/static/css/main.073c9b0a.css",
+    "main.js": "/league-tracker/static/js/main.3d1612e9.js",
+    "static/js/787.a1173ae5.chunk.js": "/league-tracker/static/js/787.a1173ae5.chunk.js",
+    "index.html": "/league-tracker/index.html",
+    "main.073c9b0a.css.map": "/league-tracker/static/css/main.073c9b0a.css.map",
+    "main.3d1612e9.js.map": "/league-tracker/static/js/main.3d1612e9.js.map",
+    "787.a1173ae5.chunk.js.map": "/league-tracker/static/js/787.a1173ae5.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.3d1612e9.js"
+  ]
+}
