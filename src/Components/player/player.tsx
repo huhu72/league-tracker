@@ -10,15 +10,15 @@ const Player = (player: PlayerTypes) => {
     const url = `https://riot-backend.onrender.com/summoner/ranked?summoner=${player.summonerName}`;
     axios.get(url).then((response) => {
       setSummoner(response.data);
-      console.log(response.data);
+      //console.log(response.data);
     });
   }, [player.summonerName]);
   return (
     <div>
       <p>{player.summonerName}</p>
-      <p>Level: {summoner?.summonerLevel}</p>
-      <p>Tier: {summoner?.tier ? summoner?.tier : "NA"}</p>
-      <p>Rank: {summoner?.rank ? summoner?.rank : "NA"}</p>
+      <p>Level: {summoner?.summonerLevel || "Loading..."}</p>
+      <p>Tier: {(summoner?.tier ? summoner?.tier : "NA") || "Loading..."}</p>
+      <p>Rank: {(summoner?.rank ? summoner?.rank : "NA") || "Loading..."}</p>
     </div>
   );
 };
