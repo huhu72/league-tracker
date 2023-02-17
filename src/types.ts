@@ -11,8 +11,8 @@ export interface Summoner {
   encriptedId?: String;
   puuid?: String;
   summonerLevel?: number;
-  tier?: String;
-  rank?: String;
+  tier?: string;
+  rank?: string;
   leaguePoints?: number;
   wins?: number;
   losses?: number;

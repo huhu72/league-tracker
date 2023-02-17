@@ -6,6 +6,7 @@ import Player from "./Components/player/player";
 import { useTable } from "react-table";
 import { Summoner } from "./types";
 import Table from "./Components/Table/Table";
+import { platform } from "os";
 
 function App() {
   const p: String[] = [
@@ -27,7 +28,7 @@ function App() {
     // console.log(player);
     setPlayers((players) => [...players, player]);
   }
-  console.log(players);
+
   return (
     <div className="App">
       {p.map((player) => {
