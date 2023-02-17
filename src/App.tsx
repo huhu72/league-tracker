@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import Banner from "./Components/banner/banner";
+import Player from "./Components/player/player";
+import { useTable } from "react-table";
+import { Summoner } from "./types";
+import Table from "./Components/Table/Table";
 
 function App() {
-  const p = [
+  const p: String[] = [
     "huhu72",
-    "Fenoom",
     "The Rizz",
     "XxSaltyPotatoxX",
     "Goblinguy9",
@@ -18,11 +21,39 @@ function App() {
     "pretzelpaste",
     "shaco spitstain",
   ];
+  const [players, setPlayers] = useState<Summoner[]>([]);
+
+  function updatePlayers(player: Summoner): void {
+    // console.log(player);
+    setPlayers((players) => [...players, player]);
+  }
+  console.log(players);
   return (
     <div className="App">
       {p.map((player) => {
-        return <Banner summoner={player}></Banner>;
+        return (
+          <Player
+            playerName={player}
+            players={players}
+            updatePlayers={updatePlayers}
+          ></Player>
+        );
       })}
+      <Table playerData={players}></Table>
+      {/* <table>
+        <tr>
+          <th>Name</th>
+          <th>Level</th>
+          <th>Tier</th>
+          <th>Rank</th>
+        </tr>
+        {p.map((player) => {
+          return <Player summonerName={player}></Player>;
+        })}
+      </table> */}
+      {/* {p.map((player) => {
+        return <Banner summoner={player}></Banner>;
+      })} */}
     </div>
   );
 }

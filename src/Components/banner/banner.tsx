@@ -13,7 +13,7 @@ function Banner(props: BannerTypes) {
         border: "1px solid rgba(0, 0, 0, 0.05)",
       }}
     >
-      <Player summonerName={props.summoner}></Player>
+      {/* <Player summonerName={props.summoner}></Player> */}
     </div>
   );
 }

@@ -5,14 +5,14 @@ export interface PlayerTypes {
   summonerName: string;
 }
 export interface Summoner {
-  accountId?: string;
+  accountId?: String;
   profileIconId?: number;
-  summonerName?: string;
-  encriptedId?: string;
-  puuid?: string;
+  summonerName?: String;
+  encriptedId?: String;
+  puuid?: String;
   summonerLevel?: number;
-  tier?: string;
-  rank?: string;
+  tier?: String;
+  rank?: String;
   leaguePoints?: number;
   wins?: number;
   losses?: number;
