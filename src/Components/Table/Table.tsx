@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Column, useSortBy, useTable, Row } from 'react-table';
 import { Summoner } from '../../types';
 import './table.css';
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 
 export default function Table() {
 	const [players, setPlayers] = useState<Summoner[]>([]);
@@ -11,33 +11,58 @@ export default function Table() {
 
 	const playerNames: String[] = [
 		'huhu72',
-		'The Rizz',
-		'XxSaltyPotatoxX',
-		'Goblinguy9',
-		'TheMountaineer',
-		'milky milkers',
-		'McEggs',
-		'Curls for Jesus',
-		'grizzlyging',
-		'pretzelpaste',
-		'shaco spitstain',
+		// 'The Rizz',
+		// 'XxSaltyPotatoxX',
+		// 'Goblinguy9',
+		// 'TheMountaineer',
+		// 'milky milkers',
+		// 'McEggs',
+		// 'Curls for Jesus',
+		// 'grizzlyging',
+		// 'pretzelpaste',
+		// 'shaco spitstain',
 	];
 
+	/*
+//PUT:
+const tempPlayer = {
+				eid: '1',
+				summonerName: 'huhu72',
+				summonerLevel: 999,
+			};
+			axios.put(`http://localhost:5000/user/PUT`, tempPlayer);
+//GET:
+const result = await axios.get(`http://localhost:5000/user/GET`);
+
+//POST:
+const tempPlayer = {
+			eid: '2',
+			summonerName: 'huhu72',
+			summonerLevel: 100000,
+		};
+		//axios.post(`http://localhost:5000/user/POST`, tempPlayer);
+
+*/
 	useEffect(() => {
 		const fetchData = async () => {
-			const fetches = playerNames.map(async (playerName) => {
-				const url = `https://riot-backend.onrender.com/summoner/ranked?summoner=${playerName}`;
-				const response = await axios.get(url);
-				return response.data;
-			});
-			const results = await Promise.all(fetches);
-			setIsLoading(false);
-			results.forEach((player) => {
-				addPlayer(player);
-			});
+			// const fetches = playerNames.map(async (playerName) => {
+			// 	const url = `http://localhost:5000/summoner/ranked?summoner=${playerName}`;
+			// 	const response = await axios.get(url);
+			// 	return response.data;
+			// });
+			// const results = await Promise.all(fetches);
+			// setIsLoading(false);
+			// results.forEach((player) => {
+			// 	addPlayer(player);
+
+			//  });
+
+			const result = await axios.get(`http://localhost:5000/user/GET`);
+			console.log(result.data);
 		};
 		fetchData();
 	}, []);
+
 	//console.log(playerData);
 	const tierMap = new Map();
 	tierMap.set('NA', 0);
