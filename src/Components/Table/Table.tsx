@@ -26,7 +26,7 @@ export default function Table() {
 	useEffect(() => {
 		const fetchData = async () => {
 			const fetches = playerNames.map(async (playerName) => {
-				const url = `http://localhost:5000/summoner/ranked?summoner=${playerName}`;
+				const url = `https://riot-backend.onrender.com/summoner/ranked?summoner=${playerName}`;
 				const response = await axios.get(url);
 				return response.data;
 			});
