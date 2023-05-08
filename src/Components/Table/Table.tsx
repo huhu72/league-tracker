@@ -25,9 +25,10 @@ export default function Table() {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const fetches = playerNames.map((playerName) => {
-				const url = `https://riot-backend.onrender.com/summoner/ranked?summoner=${playerName}`;
-				return axios.get(url).then((response) => response.data);
+			const fetches = playerNames.map(async (playerName) => {
+				const url = `http://localhost:5000/summoner/ranked?summoner=${playerName}`;
+				const response = await axios.get(url);
+				return response.data;
 			});
 			const results = await Promise.all(fetches);
 			setIsLoading(false);
@@ -41,12 +42,12 @@ export default function Table() {
 	const tierMap = new Map();
 	tierMap.set('NA', 0);
 	tierMap.set('IRON', 100);
-	tierMap.set('BRONZE', 400);
-	tierMap.set('SILVER', 700);
-	tierMap.set('GOLD', 1000);
-	tierMap.set('PLATINUM', 1300);
-	tierMap.set('DIAMOND', 1600);
-	tierMap.set('MASTER', 1900);
+	tierMap.set('BRONZE', 500);
+	tierMap.set('SILVER', 900);
+	tierMap.set('GOLD', 1300);
+	tierMap.set('PLATINUM', 1700);
+	tierMap.set('DIAMOND', 2100);
+	tierMap.set('MASTER', 2500);
 	tierMap.set('GRANDMASTER', 2200);
 	tierMap.set('CHALLENGER', 2500);
 	const rankMap = new Map();
