@@ -13,7 +13,15 @@ To install League Tracker, follow these steps:
 
 ## Usage
 
-To use League Tracker, open your web browser and navigate to `https://huhu72.github.io/league-tracker/`
+To use the app, you can visit the deployed version at [https://huhu72.github.io/league-tracker/](https://huhu72.github.io/league-tracker/).
+
+Alternatively, you can clone the repository to your local machine and run it locally by following these steps:
+
+1. Clone the repository to your local machine.
+2. Navigate to the root directory of the project in your terminal.
+3. Run `npm install` to install the necessary dependencies.
+4. Run `npm start` to start the development server.
+5. Open [http://localhost:3000](http://localhost:3000) in your web browser.
 
 
 ## Contributing
