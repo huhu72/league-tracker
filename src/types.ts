@@ -17,3 +17,7 @@ export interface Summoner {
 	wins?: number;
 	losses?: number;
 }
+export interface PlayerProps {
+	playerName: String;
+	updatePlayers: (player: Summoner) => void;
+}

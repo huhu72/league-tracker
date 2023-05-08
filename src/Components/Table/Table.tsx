@@ -1,10 +1,42 @@
 import * as React from 'react';
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Column, useSortBy, useTable, Row } from 'react-table';
-import { PlayerTypes, Summoner } from '../../types';
+import { Summoner } from '../../types';
 import './table.css';
+import axios from 'axios';
 
-export default function Table({ playerData }: { playerData: Summoner[] }) {
+export default function Table() {
+	const [players, setPlayers] = useState<Summoner[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
+
+	const playerNames: String[] = [
+		'huhu72',
+		'The Rizz',
+		'XxSaltyPotatoxX',
+		'Goblinguy9',
+		'TheMountaineer',
+		'milky milkers',
+		'McEggs',
+		'Curls for Jesus',
+		'grizzlyging',
+		'pretzelpaste',
+		'shaco spitstain',
+	];
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const fetches = playerNames.map((playerName) => {
+				const url = `https://riot-backend.onrender.com/summoner/ranked?summoner=${playerName}`;
+				return axios.get(url).then((response) => response.data);
+			});
+			const results = await Promise.all(fetches);
+			setIsLoading(false);
+			results.forEach((player) => {
+				addPlayer(player);
+			});
+		};
+		fetchData();
+	}, []);
 	//console.log(playerData);
 	const tierMap = new Map();
 	tierMap.set('NA', 0);
@@ -38,25 +70,15 @@ export default function Table({ playerData }: { playerData: Summoner[] }) {
 	function getLpValue(leaguePoints: number | undefined): number {
 		return leaguePoints ? leaguePoints : 0;
 	}
-	function getPlayerValue(
-		rank: string | undefined,
-		tier: string | undefined,
-		lp: number | undefined
-	): number {
-		console.log(
-			getRankValue(rank) + '+' + getTierValue(tier) + '+' + getLpValue(lp)
+	function getPlayerValue(summoner: Summoner): number {
+		return (
+			getRankValue(summoner.rank) +
+			getTierValue(summoner.tier) +
+			getLpValue(summoner.leaguePoints)
 		);
-		return getRankValue(rank) + getTierValue(tier) + getLpValue(lp);
 	}
 
-	playerData.sort((a, b) => {
-		return (
-			getPlayerValue(b.rank, b.tier, b.leaguePoints) -
-			getPlayerValue(a.rank, a.tier, a.leaguePoints)
-		);
-	});
-	// playerData = sortedPlayers;
-	console.log(playerData);
+	console.log(players);
 
 	const columns = useMemo<Column<Summoner>[]>(
 		() => [
@@ -83,8 +105,16 @@ export default function Table({ playerData }: { playerData: Summoner[] }) {
 		],
 		[]
 	);
+	function addPlayer(newPlayer: Summoner): void {
+		setPlayers((prevPlayers) => {
+			const updatedPlayers = [...prevPlayers, newPlayer];
+			return updatedPlayers.sort((a, b) => {
+				return getPlayerValue(b) - getPlayerValue(a);
+			});
+		});
+	}
 
-	const data = useMemo(() => playerData, [playerData]);
+	const data = useMemo(() => players, [players]);
 
 	const {
 		getTableProps, // table props from react-table
@@ -100,30 +130,39 @@ export default function Table({ playerData }: { playerData: Summoner[] }) {
 		useSortBy
 	);
 	return (
-		<table {...getTableProps()}>
-			<thead>
-				{headerGroups.map((headerGroup) => (
-					<tr {...headerGroup.getHeaderGroupProps()}>
-						{headerGroup.headers.map((column) => (
-							<th {...column.getHeaderProps(column.getSortByToggleProps())}>
-								{column.render('Header')}
-							</th>
+		<>
+			{' '}
+			{isLoading ? (
+				<p>Loading...</p>
+			) : (
+				<table {...getTableProps()}>
+					<thead>
+						{headerGroups.map((headerGroup) => (
+							<tr {...headerGroup.getHeaderGroupProps()}>
+								{headerGroup.headers.map((column) => (
+									<th {...column.getHeaderProps(column.getSortByToggleProps())}>
+										{column.render('Header')}
+									</th>
+								))}
+							</tr>
 						))}
-					</tr>
-				))}
-			</thead>
-			<tbody {...getTableBodyProps()}>
-				{rows.map((row, i) => {
-					prepareRow(row);
-					return (
-						<tr {...row.getRowProps()}>
-							{row.cells.map((cell) => {
-								return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-							})}
-						</tr>
-					);
-				})}
-			</tbody>
-		</table>
+					</thead>
+					<tbody {...getTableBodyProps()}>
+						{rows.map((row, i) => {
+							prepareRow(row);
+							return (
+								<tr {...row.getRowProps()}>
+									{row.cells.map((cell) => {
+										return (
+											<td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+										);
+									})}
+								</tr>
+							);
+						})}
+					</tbody>
+				</table>
+			)}
+		</>
 	);
 }
