@@ -9,7 +9,7 @@ export interface Summoner {
 	encriptedId?: String;
 	summonerLevel?: number;
 	tier?: string;
-	rank?: string;
+	playerRank?: string;
 	leaguePoints?: number;
 	wins?: number;
 	losses?: number;
@@ -18,5 +18,7 @@ export interface Summoner {
 }
 export interface PlayerProps {
 	playerName: String;
-	updatePlayers: (player: Summoner) => void;
+	players: Summoner[];
+	isLoaded: boolean;
+	addPlayer: (player: Summoner) => void;
 }
