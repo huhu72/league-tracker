@@ -22,3 +22,7 @@ export interface PlayerProps {
 	isLoaded: boolean;
 	addPlayer: (player: Summoner) => void;
 }
+export interface tableProps {
+	data: Summoner[];
+	tableRef: React.RefObject<HTMLTableElement>;
+}

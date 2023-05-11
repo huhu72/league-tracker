@@ -1,14 +1,10 @@
 import * as React from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Column, useTable } from 'react-table';
-import { Summoner } from '../../types';
+import { Summoner, tableProps } from '../../types';
 import './table.css';
 
-interface Props {
-	data: Summoner[];
-	tableRef: React.RefObject<HTMLTableElement>;
-}
-export default function Table({ data, tableRef }: Props) {
+export default function Table({ data, tableRef }: tableProps) {
 	const [isLoading, setIsLoading] = useState(true);
 	useEffect(() => {
 		if (data) {
