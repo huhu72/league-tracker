@@ -43,10 +43,15 @@ const tempPlayer = {
 	async function getPlayerFromRiotAPI(playerName: String) {
 		console.log(`grabbing ${playerName}`);
 		axios
-			.get(`http://localhost:5000/summoner/ranked?summoner=${playerName}`)
+			.get(
+				`https://riot-backend.onrender.com/summoner/ranked?summoner=${playerName}`
+			)
 			.then((response) => {
 				addPlayer(response.data);
-				axios.post(`http://localhost:5000/user/POST`, response.data);
+				axios.post(
+					`https://riot-backend.onrender.com/user/POST`,
+					response.data
+				);
 			})
 			.catch((error) => {});
 	}

@@ -85,7 +85,9 @@ function App() {
 
 	useEffect(() => {
 		async function fetchData() {
-			const result = await axios.get(`http://localhost:5000/user/GET`);
+			const result = await axios.get(
+				`https://riot-backend.onrender.com/user/GET`
+			);
 			if (result.status === 200) {
 				setIsLoaded(true);
 			}
