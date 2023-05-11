@@ -1,111 +1,26 @@
 import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
-import { Column, useSortBy, useTable, Row } from 'react-table';
-import { Summoner } from '../../types';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Column, useTable } from 'react-table';
+import { Summoner, tableProps } from '../../types';
 import './table.css';
-import axios, { Axios } from 'axios';
 
-export default function Table() {
-	const [players, setPlayers] = useState<Summoner[]>([]);
+export default function Table({ data, tableRef }: tableProps) {
 	const [isLoading, setIsLoading] = useState(true);
-
-	const playerNames: String[] = [
-		'huhu72',
-		// 'The Rizz',
-		// 'XxSaltyPotatoxX',
-		// 'Goblinguy9',
-		// 'TheMountaineer',
-		// 'milky milkers',
-		// 'McEggs',
-		// 'Curls for Jesus',
-		// 'grizzlyging',
-		// 'pretzelpaste',
-		// 'shaco spitstain',
-	];
-
-	/*
-//PUT:
-const tempPlayer = {
-				eid: '1',
-				summonerName: 'huhu72',
-				summonerLevel: 999,
-			};
-			axios.put(`http://localhost:5000/user/PUT`, tempPlayer);
-//GET:
-const result = await axios.get(`http://localhost:5000/user/GET`);
-
-//POST:
-const tempPlayer = {
-			eid: '2',
-			summonerName: 'huhu72',
-			summonerLevel: 100000,
-		};
-		//axios.post(`http://localhost:5000/user/POST`, tempPlayer);
-
-*/
 	useEffect(() => {
-		const fetchData = async () => {
-			// const fetches = playerNames.map(async (playerName) => {
-			// 	const url = `http://localhost:5000/summoner/ranked?summoner=${playerName}`;
-			// 	const response = await axios.get(url);
-			// 	return response.data;
-			// });
-			// const results = await Promise.all(fetches);
-			// setIsLoading(false);
-			// results.forEach((player) => {
-			// 	addPlayer(player);
+		if (data) {
+			setIsLoading(false);
 
-			//  });
-
-			const result = await axios.get(`http://localhost:5000/user/GET`);
-			console.log(result.data);
-		};
-		fetchData();
-	}, []);
-
-	//console.log(playerData);
-	const tierMap = new Map();
-	tierMap.set('NA', 0);
-	tierMap.set('IRON', 100);
-	tierMap.set('BRONZE', 500);
-	tierMap.set('SILVER', 900);
-	tierMap.set('GOLD', 1300);
-	tierMap.set('PLATINUM', 1700);
-	tierMap.set('DIAMOND', 2100);
-	tierMap.set('MASTER', 2500);
-	tierMap.set('GRANDMASTER', 2200);
-	tierMap.set('CHALLENGER', 2500);
-	const rankMap = new Map();
-	rankMap.set('NA', -100);
-	rankMap.set('I', 300);
-	rankMap.set('II', 200);
-	rankMap.set('III', 100);
-	rankMap.set('IV', 0);
-	function getRankValue(rank: string | undefined): number {
-		if (rank === 'NA') {
-			return 0;
+			if (tableRef.current) {
+				setIsLoading(false);
+				const tableRows = tableRef.current.getElementsByTagName('tr');
+				const newRow = tableRows[tableRows.length - 1];
+				newRow.scrollIntoView();
+			}
 		} else {
-			return rankMap.get(rank);
+			setIsLoading(true);
 		}
-	}
-	function getTierValue(tier: string | undefined): number {
-		if (tier) {
-			return tierMap.get(tier);
-		} else return 0;
-	}
-	function getLpValue(leaguePoints: number | undefined): number {
-		return leaguePoints ? leaguePoints : 0;
-	}
-	function getPlayerValue(summoner: Summoner): number {
-		return (
-			getRankValue(summoner.rank) +
-			getTierValue(summoner.tier) +
-			getLpValue(summoner.leaguePoints)
-		);
-	}
-
-	console.log(players);
-
+	}, [data]);
+	//console.log(data);
 	const columns = useMemo<Column<Summoner>[]>(
 		() => [
 			{
@@ -122,7 +37,7 @@ const tempPlayer = {
 			},
 			{
 				Header: 'Rank',
-				accessor: 'rank',
+				accessor: 'playerRank',
 			},
 			{
 				Header: 'LP',
@@ -131,16 +46,6 @@ const tempPlayer = {
 		],
 		[]
 	);
-	function addPlayer(newPlayer: Summoner): void {
-		setPlayers((prevPlayers) => {
-			const updatedPlayers = [...prevPlayers, newPlayer];
-			return updatedPlayers.sort((a, b) => {
-				return getPlayerValue(b) - getPlayerValue(a);
-			});
-		});
-	}
-
-	const data = useMemo(() => players, [players]);
 
 	const {
 		getTableProps, // table props from react-table
@@ -148,25 +53,22 @@ const tempPlayer = {
 		headerGroups, // headerGroups, if your table has groupings
 		rows, // rows for the table based on the data passed
 		prepareRow, // Prepare the row (this function needs to be called for each row before getting the row props)
-	} = useTable(
-		{
-			columns,
-			data,
-		},
-		useSortBy
-	);
+	} = useTable({
+		columns,
+		data,
+	});
 	return (
 		<>
 			{' '}
 			{isLoading ? (
 				<p>Loading...</p>
 			) : (
-				<table {...getTableProps()}>
+				<table {...getTableProps()} ref={tableRef}>
 					<thead>
 						{headerGroups.map((headerGroup) => (
 							<tr {...headerGroup.getHeaderGroupProps()}>
 								{headerGroup.headers.map((column) => (
-									<th {...column.getHeaderProps(column.getSortByToggleProps())}>
+									<th {...column.getHeaderProps()}>
 										{column.render('Header')}
 									</th>
 								))}
