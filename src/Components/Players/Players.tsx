@@ -4,7 +4,7 @@ import axios from 'axios';
 import './Players.css';
 
 export default function Player({
-	playerName,
+	defaultListPlayerName,
 	addPlayer,
 	players,
 	isLoaded,
@@ -31,10 +31,12 @@ const tempPlayer = {
 */
 	useEffect(() => {
 		async function fetchData() {
-			if (isLoaded) {
-				if (!players.some((player) => player.summonerName === playerName)) {
-					getPlayerFromRiotAPI(playerName);
-				}
+			if (
+				!players.some(
+					(player_table) => player_table.summonerName === defaultListPlayerName
+				)
+			) {
+				getPlayerFromRiotAPI(defaultListPlayerName);
 			}
 		}
 		fetchData();

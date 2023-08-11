@@ -17,7 +17,7 @@ export interface Summoner {
 	last_updated?: Date;
 }
 export interface PlayerProps {
-	playerName: String;
+	defaultListPlayerName: String;
 	players: Summoner[];
 	isLoaded: boolean;
 	addPlayer: (player: Summoner) => void;

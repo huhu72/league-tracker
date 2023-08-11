@@ -9,7 +9,7 @@ import axios from 'axios';
 function App() {
 	const [players, setPlayers] = useState<Summoner[]>([]);
 	const [isLoaded, setIsLoaded] = useState(false);
-	const [playerNames, setPlayerNames] = useState([
+	const [defaultListPlayerNames, setDefaultListPlayerNames] = useState([
 		'huhu72',
 		'The Rizz',
 		'XxSaltyPotatoxX',
@@ -83,32 +83,34 @@ function App() {
 			});
 		});
 	}
+	//TODO: Figure out why this was needed and why isLoaded state was created. Maybe it was for getting player info from database and it just had the wrong url?
 	useEffect(() => {
-		async function fetchData() {
-			const result = await axios.get(`http://localhost:5000/user/GET`);
-			if (result.status === 200) {
-				setIsLoaded(true);
-				const sortedPlayers = result.data.sort((a: Summoner, b: Summoner) => {
-					return getPlayerValue(b) - getPlayerValue(a);
-				});
-				setPlayers(sortedPlayers);
-			}
-		}
-		fetchData();
+		// async function fetchData() {
+		// 	const result = await axios.get(`http://localhost:5000/summoner/`);
+		// 	console.log(result.data);
+		// 	if (result.status === 200) {
+		// 		setIsLoaded(true);
+		// 		const sortedPlayers = result.data.sort((a: Summoner, b: Summoner) => {
+		// 			return getPlayerValue(b) - getPlayerValue(a);
+		// 		});
+		// 		setPlayers(sortedPlayers);
+		// 	}
+		// }
+		// fetchData();
 	}, []);
 
 	function addToPlayerNames(newPlayerName: string) {
-		setPlayerNames((prevPlayerNames) => {
+		setDefaultListPlayerNames((prevPlayerNames) => {
 			return [...prevPlayerNames, newPlayerName];
 		});
 	}
 
 	return (
 		<div className='App' style={{ display: 'flex', flexDirection: 'column' }}>
-			{playerNames.map((player) => {
+			{defaultListPlayerNames.map((player) => {
 				return (
 					<Players
-						playerName={player}
+						defaultListPlayerName={player}
 						addPlayer={addPlayer}
 						players={players}
 						isLoaded={isLoaded}
