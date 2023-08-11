@@ -9,7 +9,7 @@ import axios from 'axios';
 function App() {
 	const [players, setPlayers] = useState<Summoner[]>([]);
 	const [isLoaded, setIsLoaded] = useState(false);
-	const playerNames: String[] = [
+	const [playerNames, setPlayerNames] = useState([
 		'huhu72',
 		'The Rizz',
 		'XxSaltyPotatoxX',
@@ -21,28 +21,20 @@ function App() {
 		'grizzlyging',
 		'pretzelpaste',
 		'shaco spitstain',
-	];
+	]);
 	const onAddRowClick = () => {
 		setPlayers(
 			players.concat({
-				summonerName: 'sad',
-				summonerLevel: 1,
-				tier: '',
-				playerRank: '',
+				summonerName: '',
+				summonerLevel: 0,
+				tier: 'NA',
+				playerRank: 'NA',
 				leaguePoints: 0,
 			})
 		);
 	};
-
 	const tableRef = useRef<HTMLTableElement>(null);
-	function addPlayer(newPlayer: Summoner): void {
-		setPlayers((prevPlayers) => {
-			const updatedPlayers = [...prevPlayers, newPlayer];
-			return updatedPlayers.sort((a, b) => {
-				return getPlayerValue(b) - getPlayerValue(a);
-			});
-		});
-	}
+
 	function getRankValue(rank: string | undefined): number {
 		if (rank === 'NA') {
 			return 0;
@@ -83,20 +75,34 @@ function App() {
 	rankMap.set('III', 100);
 	rankMap.set('IV', 0);
 
+	function addPlayer(newPlayer: Summoner): void {
+		setPlayers((prevPlayers) => {
+			const updatedPlayers = [...prevPlayers, newPlayer];
+			return updatedPlayers.sort((a, b) => {
+				return getPlayerValue(b) - getPlayerValue(a);
+			});
+		});
+	}
 	useEffect(() => {
 		async function fetchData() {
-			const result = await axios.get(
-				`https://riot-backend.onrender.com/user/GET`
-			);
+			const result = await axios.get(`http://localhost:5000/user/GET`);
 			if (result.status === 200) {
 				setIsLoaded(true);
+				const sortedPlayers = result.data.sort((a: Summoner, b: Summoner) => {
+					return getPlayerValue(b) - getPlayerValue(a);
+				});
+				setPlayers(sortedPlayers);
 			}
-			result.data.forEach((player: Summoner) => {
-				addPlayer(player);
-			});
 		}
 		fetchData();
 	}, []);
+
+	function addToPlayerNames(newPlayerName: string) {
+		setPlayerNames((prevPlayerNames) => {
+			return [...prevPlayerNames, newPlayerName];
+		});
+	}
+
 	return (
 		<div className='App' style={{ display: 'flex', flexDirection: 'column' }}>
 			{playerNames.map((player) => {
@@ -110,7 +116,11 @@ function App() {
 				);
 			})}
 			<div className='table-container'>
-				<Table data={players} tableRef={tableRef}></Table>
+				<Table
+					data={players}
+					tableRef={tableRef}
+					addToPlayerNames={addToPlayerNames}
+				></Table>
 			</div>
 			<button
 				onClick={onAddRowClick}

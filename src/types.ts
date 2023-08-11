@@ -24,5 +24,6 @@ export interface PlayerProps {
 }
 export interface tableProps {
 	data: Summoner[];
+	addToPlayerNames: (player: string) => void;
 	tableRef: React.RefObject<HTMLTableElement>;
 }

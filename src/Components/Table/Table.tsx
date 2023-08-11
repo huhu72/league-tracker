@@ -1,10 +1,14 @@
 import * as React from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Column, useTable } from 'react-table';
+import { Column, useTable, Row } from 'react-table';
 import { Summoner, tableProps } from '../../types';
 import './table.css';
 
-export default function Table({ data, tableRef }: tableProps) {
+export default function Table({
+	data,
+	tableRef,
+	addToPlayerNames,
+}: tableProps) {
 	const [isLoading, setIsLoading] = useState(true);
 	useEffect(() => {
 		if (data) {
@@ -20,12 +24,34 @@ export default function Table({ data, tableRef }: tableProps) {
 			setIsLoading(true);
 		}
 	}, [data]);
-	//console.log(data);
+
 	const columns = useMemo<Column<Summoner>[]>(
 		() => [
 			{
 				Header: 'Name',
 				accessor: 'summonerName',
+				Cell: ({ row }: { row: Row }) => {
+					const [value, setValue] = React.useState(row.values.summonerName);
+					const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+						setValue(e.target.value);
+					};
+					//TODO: move this outside of the table. We cant access state within useMemo
+					const onSavePlayer = () => {
+						addToPlayerNames(value);
+						const dataCopy = [...data];
+						dataCopy.splice(row.index, 1);
+						console.log(dataCopy);
+					};
+					if (row.values.summonerName === '') {
+						return (
+							<div>
+								<input type='text' value={value} onChange={onChange} />
+								<button onClick={onSavePlayer}>Save Button</button>
+							</div>
+						);
+					}
+					return row.values.summonerName;
+				},
 			},
 			{
 				Header: 'Level',
