@@ -51,11 +51,7 @@ function App() {
 		return leaguePoints ? leaguePoints : 0;
 	}
 	function getPlayerValue(summoner: Summoner): number {
-		return (
-			getRankValue(summoner.playerRank) +
-			getTierValue(summoner.tier) +
-			getLpValue(summoner.leaguePoints)
-		);
+		return getRankValue(summoner.playerRank) + getTierValue(summoner.tier) + getLpValue(summoner.leaguePoints);
 	}
 	const tierMap = new Map();
 	tierMap.set('NA', 0);
@@ -108,26 +104,12 @@ function App() {
 	return (
 		<div className='App' style={{ display: 'flex', flexDirection: 'column' }}>
 			{defaultListPlayerNames.map((player) => {
-				return (
-					<Players
-						defaultListPlayerName={player}
-						addPlayer={addPlayer}
-						players={players}
-						isLoaded={isLoaded}
-					></Players>
-				);
+				return <Players defaultListOfPlayerName={player} addPlayer={addPlayer} players={players} isLoaded={isLoaded}></Players>;
 			})}
 			<div className='table-container'>
-				<Table
-					data={players}
-					tableRef={tableRef}
-					addToPlayerNames={addToPlayerNames}
-				></Table>
+				<Table data={players} tableRef={tableRef} addToPlayerNames={addToPlayerNames}></Table>
 			</div>
-			<button
-				onClick={onAddRowClick}
-				className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-			>
+			<button onClick={onAddRowClick} className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
 				Add Row
 			</button>
 		</div>

@@ -4,11 +4,7 @@ import { Column, useTable, Row } from 'react-table';
 import { Summoner, tableProps } from '../../types';
 import './table.css';
 
-export default function Table({
-	data,
-	tableRef,
-	addToPlayerNames,
-}: tableProps) {
+export default function Table({ data, tableRef, addToPlayerNames }: tableProps) {
 	const [isLoading, setIsLoading] = useState(true);
 	useEffect(() => {
 		if (data) {
@@ -94,9 +90,7 @@ export default function Table({
 						{headerGroups.map((headerGroup) => (
 							<tr {...headerGroup.getHeaderGroupProps()}>
 								{headerGroup.headers.map((column) => (
-									<th {...column.getHeaderProps()}>
-										{column.render('Header')}
-									</th>
+									<th {...column.getHeaderProps()}>{column.render('Header')}</th>
 								))}
 							</tr>
 						))}
@@ -107,9 +101,7 @@ export default function Table({
 							return (
 								<tr {...row.getRowProps()}>
 									{row.cells.map((cell) => {
-										return (
-											<td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-										);
+										return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
 									})}
 								</tr>
 							);
