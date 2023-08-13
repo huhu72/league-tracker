@@ -8,20 +8,8 @@ import axios from 'axios';
 
 function App() {
 	const [players, setPlayers] = useState<Summoner[]>([]);
-	const [isLoaded, setIsLoaded] = useState(false);
-	const [defaultListPlayerNames, setDefaultListPlayerNames] = useState([
-		'huhu72',
-		'The Rizz',
-		'XxSaltyPotatoxX',
-		'Goblinguy9',
-		'TheMountaineer',
-		'milky milkers',
-		'McEggs',
-		'Curls for Jesus',
-		'grizzlyging',
-		'pretzelpaste',
-		'shaco spitstain',
-	]);
+	const [hasData, setHasData] = useState(false);
+	const [defaultListPlayerNames, setDefaultListPlayerNames] = useState<string[]>([]);
 	const onAddRowClick = () => {
 		setPlayers(
 			players.concat({
@@ -79,20 +67,28 @@ function App() {
 			});
 		});
 	}
-	//TODO: Figure out why this was needed and why isLoaded state was created. Maybe it was for getting player info from database and it just had the wrong url?
 	useEffect(() => {
-		// async function fetchData() {
-		// 	const result = await axios.get(`http://localhost:5000/summoner/`);
-		// 	console.log(result.data);
-		// 	if (result.status === 200) {
-		// 		setIsLoaded(true);
-		// 		const sortedPlayers = result.data.sort((a: Summoner, b: Summoner) => {
-		// 			return getPlayerValue(b) - getPlayerValue(a);
-		// 		});
-		// 		setPlayers(sortedPlayers);
-		// 	}
-		// }
-		// fetchData();
+		async function getPlayersFromDB() {
+			axios.get(`http://localhost:5000/user/GET`).then((response) => {
+				if (response.status === 204 || response.status === 404) {
+					console.log('Databse is empty');
+					return;
+				} else {
+					console.log(response.data);
+
+					for (var summoner of response.data) {
+						if (compareDates(response.data.lastUpdated)) {
+							getPlayerFromRiotAPI(summoner.summonerName);
+						} else {
+							console.log('Got data from Firebase');
+							addPlayer(summoner);
+						}
+					}
+					setHasData(true);
+				}
+			});
+		}
+		getPlayersFromDB();
 	}, []);
 
 	function addToPlayerNames(newPlayerName: string) {
@@ -100,11 +96,47 @@ function App() {
 			return [...prevPlayerNames, newPlayerName];
 		});
 	}
+	function compareDates(date1: string): boolean {
+		const now = new Date();
+		//console.log('now ' + now);
+		const lastUpdated = new Date(date1);
+		const msBetweenDates = Math.abs(now.getTime() - lastUpdated.getTime());
+		const daysbetweenDates = msBetweenDates / (24 * 60 * 1000);
+
+		return daysbetweenDates >= 5 ? true : false;
+	}
+	async function getPlayerFromRiotAPI(playerName: String) {
+		axios
+			.get(`http://localhost:5000/summoner/ranked?summoner=${playerName}`)
+			.then((response) => {
+				response.data.lastUpdated = new Date();
+				// console.log(playerName + ' to database');
+				addPlayer(response.data);
+				axios.post(`http://localhost:5000/user/POST`, response.data);
+				// .then(function (response) {
+				// 	console.log(response);
+				// })
+				// .catch(function (error) {
+				// 	console.log(error);
+				// });
+			})
+			.catch((error) => {});
+	}
 
 	return (
 		<div className='App' style={{ display: 'flex', flexDirection: 'column' }}>
 			{defaultListPlayerNames.map((player) => {
-				return <Players defaultListOfPlayerName={player} addPlayer={addPlayer} players={players} isLoaded={isLoaded}></Players>;
+				return (
+					<Players
+						defaultListOfPlayerName={player}
+						addPlayer={addPlayer}
+						players={players}
+						hasData={hasData}
+						compareDates={compareDates}
+						getPlayerFromRiotAPI={getPlayerFromRiotAPI}
+						setPlayers={setPlayers}
+					></Players>
+				);
 			})}
 			<div className='table-container'>
 				<Table data={players} tableRef={tableRef} addToPlayerNames={addToPlayerNames}></Table>

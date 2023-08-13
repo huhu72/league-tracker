@@ -5,8 +5,8 @@ export interface PlayerTypes {
 	summonerName: string;
 }
 export interface Summoner {
-	summonerName?: String;
-	encriptedId?: String;
+	summonerName?: string;
+	encriptedId?: string;
 	summonerLevel?: number;
 	tier?: string;
 	playerRank?: string;
@@ -19,8 +19,11 @@ export interface Summoner {
 export interface PlayerProps {
 	defaultListOfPlayerName: String;
 	players: Summoner[];
-	isLoaded: boolean;
+	hasData: boolean;
 	addPlayer: (player: Summoner) => void;
+	compareDates: (date: string) => boolean;
+	getPlayerFromRiotAPI: (playerName: String) => void;
+	setPlayers: React.Dispatch<React.SetStateAction<Summoner[]>>;
 }
 export interface tableProps {
 	data: Summoner[];

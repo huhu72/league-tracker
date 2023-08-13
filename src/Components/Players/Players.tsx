@@ -3,7 +3,7 @@ import { PlayerProps, Summoner } from '../../types';
 import axios from 'axios';
 import './Players.css';
 
-export default function Player({ defaultListOfPlayerName, addPlayer, players, isLoaded }: PlayerProps) {
+export default function Player({ defaultListOfPlayerName, addPlayer, players, hasData, compareDates, getPlayerFromRiotAPI, setPlayers }: PlayerProps) {
 	/*
 //PUT:
 const tempPlayer = {
@@ -24,17 +24,21 @@ const tempPlayer = {
 		//axios.post(`http://localhost:5000/user/POST`, tempPlayer);
 
 */
+	//Players need to remove the last player in the list due to when the add row button is clicked because in order to add the text box to the row, a new player with no name need to be added
 	useEffect(() => {
 		async function fetchData() {
 			if (!players.some((player_table) => player_table.summonerName === defaultListOfPlayerName)) {
+				const removeEmptyPlayer = [...players];
+				removeEmptyPlayer.pop();
+				setPlayers(removeEmptyPlayer);
 				getPlayerFromFirebaseDB(defaultListOfPlayerName);
 			}
 		}
 		fetchData();
-	}, [isLoaded]);
+	}, [hasData]);
 
 	async function getPlayerFromFirebaseDB(playerName: String) {
-		axios.get(`http://localhost:5000/user/GET?summoner=${playerName}`).then((response) => {
+		axios.get(`http://localhost:5000/user/GETUSER?summoner=${playerName}`).then((response) => {
 			if (response.status === 204 || response.status === 404) {
 				console.log('Getting data from Riot API');
 				getPlayerFromRiotAPI(playerName);
@@ -44,37 +48,12 @@ const tempPlayer = {
 					getPlayerFromRiotAPI(playerName);
 				} else {
 					console.log('Got data from Firebase');
-					const dbData = response.data;
-					dbData.summonerName = playerName;
-					addPlayer(dbData);
+
+					addPlayer(response.data);
 				}
 			}
 		});
 	}
-	function compareDates(date1: Date): boolean {
-		const now = new Date();
-		console.log('now ' + now);
-		const msBetweenDates = Math.abs(now.getTime() - date1.getTime());
-		const daysbetweenDates = msBetweenDates / (24 * 60 * 1000);
 
-		return daysbetweenDates >= 5 ? true : false;
-	}
-	async function getPlayerFromRiotAPI(playerName: String) {
-		axios
-			.get(`http://localhost:5000/summoner/ranked?summoner=${playerName}`)
-			.then((response) => {
-				response.data.lastUpdated = new Date();
-				// console.log(playerName + ' to database');
-				addPlayer(response.data);
-				axios.post(`http://localhost:5000/user/POST`, response.data);
-				// .then(function (response) {
-				// 	console.log(response);
-				// })
-				// .catch(function (error) {
-				// 	console.log(error);
-				// });
-			})
-			.catch((error) => {});
-	}
 	return null;
 }
