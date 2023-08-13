@@ -33,10 +33,8 @@ export default function Table({ data, tableRef, addToPlayerNames }: tableProps) 
 					};
 					//TODO: move this outside of the table. We cant access state within useMemo
 					const onSavePlayer = () => {
+						row.values.summonerName = value;
 						addToPlayerNames(value);
-						const dataCopy = [...data];
-						dataCopy.splice(row.index, 1);
-						console.log(dataCopy);
 					};
 					if (row.values.summonerName === '') {
 						return (
