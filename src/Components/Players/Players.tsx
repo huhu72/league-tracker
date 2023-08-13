@@ -38,7 +38,7 @@ const tempPlayer = {
 	}, [hasData]);
 
 	async function getPlayerFromFirebaseDB(playerName: String) {
-		axios.get(`http://localhost:5000/user/GETUSER?summoner=${playerName}`).then((response) => {
+		axios.get(`${process.env.REACT_APP_GET_USER_FROM_DB_URL}?summoner=${playerName}`).then((response) => {
 			if (response.status === 204 || response.status === 404) {
 				console.log('Getting data from Riot API');
 				getPlayerFromRiotAPI(playerName);

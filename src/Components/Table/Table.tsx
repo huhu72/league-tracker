@@ -31,7 +31,6 @@ export default function Table({ data, tableRef, addToPlayerNames }: tableProps) 
 					const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 						setValue(e.target.value);
 					};
-					//TODO: move this outside of the table. We cant access state within useMemo
 					const onSavePlayer = () => {
 						row.values.summonerName = value;
 						addToPlayerNames(value);

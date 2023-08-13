@@ -69,7 +69,7 @@ function App() {
 	}
 	useEffect(() => {
 		async function getPlayersFromDB() {
-			axios.get(`http://localhost:5000/user/GET`).then((response) => {
+			axios.get(`${process.env.REACT_APP_GET_USERS_FROM_DB_URL}`).then((response) => {
 				if (response.status === 204 || response.status === 404) {
 					console.log('Databse is empty');
 					return;
@@ -107,12 +107,12 @@ function App() {
 	}
 	async function getPlayerFromRiotAPI(playerName: String) {
 		axios
-			.get(`http://localhost:5000/summoner/ranked?summoner=${playerName}`)
+			.get(`${process.env.REACT_APP_GET_RANKED_INFO_URL}?summoner=${playerName}`)
 			.then((response) => {
 				response.data.lastUpdated = new Date();
 				// console.log(playerName + ' to database');
 				addPlayer(response.data);
-				axios.post(`http://localhost:5000/user/POST`, response.data);
+				axios.post(`${process.env.REACT_APP_POST_URL}`, response.data);
 				// .then(function (response) {
 				// 	console.log(response);
 				// })
